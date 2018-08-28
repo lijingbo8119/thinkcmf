@@ -1969,3 +1969,83 @@ function cmf_check_mobile($mobile)
         return false;
     }
 }
+
+function getNonceStr($length = 10, $letter = 1, $LETTER = 1, $number = 1, $OOoo00 = 1)
+{
+    /**
+     * 生成随机数的方法
+     * 根据参数可以生成不同格式的随机数
+     * 默认参数为生成10位 包含大小写字母及数字的随机数
+     * 参数意义：
+     * $length->随机数长度  $letter->是否含有小写字母  $LETTER->是否含有大写字母  $number->是否含有数字  $OOoo00->是否含有数字0、大写及小写字母o
+     * $length为大于零的int整型 其余为0、1
+     * 返回string
+     */
+    $str_number = "0123456789";
+    $str_letter = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    $str_LETTER = "abcdefghijklmnopqrstuvwxyz";
+    if ($number !== 0 && $number !== 1) {
+        $number = 1;
+    }
+    if ($letter !== 0 && $letter !== 1) {
+        $letter = 1;
+    }
+    if ($LETTER !== 0 && $LETTER !== 1) {
+        $LETTER = 1;
+    }
+    if ($OOoo00 !== 0 && $OOoo00 !== 1) {
+        $OOoo00 = 1;
+    }
+    if ($number == 0 && $letter == 0 && $LETTER == 0) {
+        $number = $letter = $LETTER = 1;
+    }
+    $strPol = '';
+    if ($number == 1) {
+        $strPol = $strPol . $str_number;
+    }
+    if ($letter == 1) {
+        $strPol = $strPol . $str_letter;
+    }
+    if ($LETTER == 1) {
+        $strPol = $strPol . $str_LETTER;
+    }
+    if ($OOoo00 == 0) {
+        $strPol = str_replace("o", "", $strPol);
+        $strPol = str_replace("O", "", $strPol);
+        $strPol = str_replace("0", "", $strPol);
+    }
+    $str = null;
+//        $strPol = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyz";
+    $max = strlen($strPol) - 1;
+    for ($i = 0; $i < $length; $i++) {
+        $str .= $strPol[mt_rand(0, $max)];//rand($min,$max)生成介于min和max两个数之间的一个随机整数
+    }
+    return $str;
+}
+
+/**
+ * 字符串截取 解决substr中文结尾乱码的问题
+ */
+function sub_str($string, $start = 0, $length = null)
+{
+    $arr = preg_split('/(?<!^)(?!$)/u', (string)$string);
+
+    if ($start > count($arr) - 1) return '';
+
+    if ($length) {
+        $result_arr = array_slice($arr, $start, $length);
+    } else {
+        $result_arr = array_slice($arr, $start);
+    }
+    return implode("", $result_arr);
+}
+
+function get_list_title($title, $length = 25)
+{
+    $sub = sub_str($title, 0, $length);
+    if ($sub == $title) {
+        return $title;
+    } else {
+        return $sub . "...";
+    }
+}

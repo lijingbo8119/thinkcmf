@@ -35,7 +35,7 @@ class PortalCategoryModel extends Model
         }
         $categories = $this->order("list_order ASC")->where($where)->select()->toArray();
 
-        $tree       = new Tree();
+        $tree = new Tree();
         $tree->icon = ['&nbsp;&nbsp;│', '&nbsp;&nbsp;├─', '&nbsp;&nbsp;└─'];
         $tree->nbsp = '&nbsp;&nbsp;';
 
@@ -47,7 +47,7 @@ class PortalCategoryModel extends Model
         }
 
         $tree->init($newCategories);
-        $str     = '<option value=\"{$id}\" {$selected}>{$spacer}{$name}</option>';
+        $str = '<option value=\"{$id}\" {$selected}>{$spacer}{$name}</option>';
         $treeStr = $tree->getTree(0, $str);
 
         return $treeStr;
@@ -66,7 +66,7 @@ class PortalCategoryModel extends Model
 //        }
         $categories = $this->order("list_order ASC")->where($where)->select()->toArray();
 
-        $tree       = new Tree();
+        $tree = new Tree();
         $tree->icon = ['&nbsp;&nbsp;│', '&nbsp;&nbsp;├─', '&nbsp;&nbsp;└─'];
         $tree->nbsp = '&nbsp;&nbsp;';
 
@@ -77,7 +77,7 @@ class PortalCategoryModel extends Model
         $newCategories = [];
         foreach ($categories as $item) {
             $item['checked'] = in_array($item['id'], $currentIds) ? "checked" : "";
-            $item['url']     = cmf_url('portal/List/index', ['id' => $item['id']]);;
+            $item['url'] = cmf_url('portal/List/index', ['id' => $item['id']]);;
             $item['str_action'] = '<a href="' . url("AdminCategory/add", ["parent" => $item['id']]) . '">添加子分类</a>  <a href="' . url("AdminCategory/edit", ["id" => $item['id']]) . '">' . lang('EDIT') . '</a>  <a class="js-ajax-delete" href="' . url("AdminCategory/delete", ["id" => $item['id']]) . '">' . lang('DELETE') . '</a> ';
             array_push($newCategories, $item);
         }
@@ -144,8 +144,8 @@ class PortalCategoryModel extends Model
     {
         $result = true;
 
-        $id          = intval($data['id']);
-        $parentId    = intval($data['parent_id']);
+        $id = intval($data['id']);
+        $parentId = intval($data['parent_id']);
         $oldCategory = $this->where('id', $id)->find();
 
         if (empty($parentId)) {
@@ -193,5 +193,18 @@ class PortalCategoryModel extends Model
         return $result;
     }
 
+    public function getLevelAttr()
+    {
+        return substr_count($this->path, '-');
+    }
 
+    public function parent()
+    {
+        return $this->belongsTo('PortalCategoryModel', 'parent_id');
+    }
+
+    public function children()
+    {
+        return $this->hasMany('PortalCategoryModel', 'parent_id');
+    }
 }
