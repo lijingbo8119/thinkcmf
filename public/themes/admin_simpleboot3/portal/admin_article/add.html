@@ -133,6 +133,43 @@
                     </tr>
 
                     <tr>
+                        <th>状态</th>
+                        <php>
+                            $status_yes=false?"checked":"";
+                            $is_top_yes=false"checked":"";
+                            $recommended_yes=false?"checked":"";
+                        </php>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="checkbox">
+                                <label>
+                                    <input  type="checkbox" id="post-status-checkbox" name="post[post_status]" value="1" {$status_yes}>发布
+                                    <span id="post-status-error" style="color: red;display: none"></span>
+                                </label>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="checkbox">
+                                <label><input type="checkbox" id="is-top-checkbox" name="post[is_top]" value="1" {$is_top_yes}>置顶</label>
+                                <span id="is-top-error" style="color: red;display: none"></span>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr style="display: none">
+                        <td>
+                            <div class="checkbox">
+                                <label>
+                                    <input type="checkbox" id="recommended-checkbox" name="post[recommended]" value="1" {$recommended_yes}>推荐
+                                    <span id="recommended-error" style="color: red;display: none"></span>
+                                </label>
+                            </div>
+                        </td>
+                    </tr>
+
+                    <tr>
                         <th>文章模板</th>
                     </tr>
                     <tr>

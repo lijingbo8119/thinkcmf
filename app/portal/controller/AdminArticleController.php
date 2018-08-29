@@ -39,12 +39,12 @@ class AdminArticleController extends AdminBaseController
         $categoryId = $this->request->param('category', 0, 'intval');
 
         $postService = new PostService();
-        $data        = $postService->adminArticleList($param);
+        $data = $postService->adminArticleList($param);
 
         $data->appends($param);
 
         $portalCategoryModel = new PortalCategoryModel();
-        $categoryTree        = $portalCategoryModel->adminCategoryTree($categoryId);
+        $categoryTree = $portalCategoryModel->adminCategoryTree($categoryId);
 
         $this->assign('start_time', isset($param['start_time']) ? $param['start_time'] : '');
         $this->assign('end_time', isset($param['end_time']) ? $param['end_time'] : '');
@@ -73,7 +73,7 @@ class AdminArticleController extends AdminBaseController
      */
     public function add()
     {
-        $themeModel        = new ThemeModel();
+        $themeModel = new ThemeModel();
         $articleThemeFiles = $themeModel->getActionThemeFiles('portal/Article/index');
         $this->assign('article_theme_files', $articleThemeFiles);
         return $this->fetch();
@@ -95,14 +95,14 @@ class AdminArticleController extends AdminBaseController
     public function addPost()
     {
         if ($this->request->isPost()) {
-            $data   = $this->request->param();
+            $data = $this->request->param();
 
             //状态只能设置默认值。未发布、未置顶、未推荐
-            $data['post']['post_status'] = 0;
-            $data['post']['is_top'] = 0;
-            $data['post']['recommended'] = 0;
+//            $data['post']['post_status'] = 0;
+//            $data['post']['is_top'] = 0;
+//            $data['post']['recommended'] = 0;
 
-            $post   = $data['post'];
+            $post = $data['post'];
 
             $result = $this->validate($post, 'AdminArticle');
             if ($result !== true) {
@@ -127,17 +127,14 @@ class AdminArticleController extends AdminBaseController
                 }
             }
 
-
-
             $portalPostModel->adminAddArticle($data['post'], $data['post']['categories']);
 
             $data['post']['id'] = $portalPostModel->id;
-            $hookParam          = [
-                'is_add'  => true,
+            $hookParam = [
+                'is_add' => true,
                 'article' => $data['post']
             ];
             hook('portal_admin_after_save_article', $hookParam);
-
 
             $this->success('添加成功!', url('AdminArticle/edit', ['id' => $portalPostModel->id]));
         }
@@ -162,11 +159,11 @@ class AdminArticleController extends AdminBaseController
         $id = $this->request->param('id', 0, 'intval');
 
         $portalPostModel = new PortalPostModel();
-        $post            = $portalPostModel->where('id', $id)->find();
-        $postCategories  = $post->categories()->alias('a')->column('a.name', 'a.id');
+        $post = $portalPostModel->where('id', $id)->find();
+        $postCategories = $post->categories()->alias('a')->column('a.name', 'a.id');
         $postCategoryIds = implode(',', array_keys($postCategories));
 
-        $themeModel        = new ThemeModel();
+        $themeModel = new ThemeModel();
         $articleThemeFiles = $themeModel->getActionThemeFiles('portal/Article/index');
         $this->assign('article_theme_files', $articleThemeFiles);
         $this->assign('post', $post);
@@ -191,16 +188,15 @@ class AdminArticleController extends AdminBaseController
      */
     public function editPost()
     {
-
         if ($this->request->isPost()) {
-            $data   = $this->request->param();
+            $data = $this->request->param();
 
             //需要抹除发布、置顶、推荐的修改。
             unset($data['post']['post_status']);
             unset($data['post']['is_top']);
             unset($data['post']['recommended']);
 
-            $post   = $data['post'];
+            $post = $data['post'];
             $result = $this->validate($post, 'AdminArticle');
             if ($result !== true) {
                 $this->error($result);
@@ -227,7 +223,7 @@ class AdminArticleController extends AdminBaseController
             $portalPostModel->adminEditArticle($data['post'], $data['post']['categories']);
 
             $hookParam = [
-                'is_add'  => false,
+                'is_add' => false,
                 'article' => $data['post']
             ];
             hook('portal_admin_after_save_article', $hookParam);
@@ -252,46 +248,45 @@ class AdminArticleController extends AdminBaseController
      */
     public function delete()
     {
-        $param           = $this->request->param();
+        $param = $this->request->param();
         $portalPostModel = new PortalPostModel();
 
         if (isset($param['id'])) {
-            $id           = $this->request->param('id', 0, 'intval');
-            $result       = $portalPostModel->where(['id' => $id])->find();
-            $data         = [
-                'object_id'   => $result['id'],
+            $id = $this->request->param('id', 0, 'intval');
+            $result = $portalPostModel->where(['id' => $id])->find();
+            $data = [
+                'object_id' => $result['id'],
                 'create_time' => time(),
-                'table_name'  => 'portal_post',
-                'name'        => $result['post_title'],
-                'user_id'=>cmf_get_current_admin_id()
+                'table_name' => 'portal_post',
+                'name' => $result['post_title'],
+                'user_id' => cmf_get_current_admin_id()
             ];
             $resultPortal = $portalPostModel
                 ->where(['id' => $id])
                 ->update(['delete_time' => time()]);
             if ($resultPortal) {
-                Db::name('portal_category_post')->where(['post_id'=>$id])->update(['status'=>0]);
-                Db::name('portal_tag_post')->where(['post_id'=>$id])->update(['status'=>0]);
+                Db::name('portal_category_post')->where(['post_id' => $id])->update(['status' => 0]);
+                Db::name('portal_tag_post')->where(['post_id' => $id])->update(['status' => 0]);
 
                 Db::name('recycleBin')->insert($data);
             }
             $this->success("删除成功！", '');
-
         }
 
         if (isset($param['ids'])) {
-            $ids     = $this->request->param('ids/a');
+            $ids = $this->request->param('ids/a');
             $recycle = $portalPostModel->where(['id' => ['in', $ids]])->select();
-            $result  = $portalPostModel->where(['id' => ['in', $ids]])->update(['delete_time' => time()]);
+            $result = $portalPostModel->where(['id' => ['in', $ids]])->update(['delete_time' => time()]);
             if ($result) {
-                Db::name('portal_category_post')->where(['post_id' => ['in', $ids]])->update(['status'=>0]);
-                Db::name('portal_tag_post')->where(['post_id' => ['in', $ids]])->update(['status'=>0]);
+                Db::name('portal_category_post')->where(['post_id' => ['in', $ids]])->update(['status' => 0]);
+                Db::name('portal_tag_post')->where(['post_id' => ['in', $ids]])->update(['status' => 0]);
                 foreach ($recycle as $value) {
                     $data = [
-                        'object_id'   => $value['id'],
+                        'object_id' => $value['id'],
                         'create_time' => time(),
-                        'table_name'  => 'portal_post',
-                        'name'        => $value['post_title'],
-                        'user_id'=>cmf_get_current_admin_id()
+                        'table_name' => 'portal_post',
+                        'name' => $value['post_title'],
+                        'user_id' => cmf_get_current_admin_id()
                     ];
                     Db::name('recycleBin')->insert($data);
                 }
@@ -315,7 +310,7 @@ class AdminArticleController extends AdminBaseController
      */
     public function publish()
     {
-        $param           = $this->request->param();
+        $param = $this->request->param();
         $portalPostModel = new PortalPostModel();
 
         if (isset($param['ids']) && isset($param["yes"])) {
@@ -351,7 +346,7 @@ class AdminArticleController extends AdminBaseController
      */
     public function top()
     {
-        $param           = $this->request->param();
+        $param = $this->request->param();
         $portalPostModel = new PortalPostModel();
 
         if (isset($param['ids']) && isset($param["yes"])) {
@@ -387,7 +382,7 @@ class AdminArticleController extends AdminBaseController
      */
     public function recommend()
     {
-        $param           = $this->request->param();
+        $param = $this->request->param();
         $portalPostModel = new PortalPostModel();
 
         if (isset($param['ids']) && isset($param["yes"])) {
@@ -404,7 +399,6 @@ class AdminArticleController extends AdminBaseController
             $portalPostModel->where(['id' => ['in', $ids]])->update(['recommended' => 0]);
 
             $this->success("取消推荐成功！", '');
-
         }
     }
 
@@ -436,6 +430,4 @@ class AdminArticleController extends AdminBaseController
     {
 
     }
-
-
 }
