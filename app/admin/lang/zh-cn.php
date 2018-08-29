@@ -9,10 +9,11 @@
 // | Author: 老猫 <thinkcmf@126.com>
 // +----------------------------------------------------------------------
 return [
+    'ADMIN_CENTER_TOP'                   => '经信委',
     'ADMIN_CENTER'                       => '后台管理中心',
     'WELCOME_USER'                       => '欢迎, {:user_nickname}',
-    'REFRESH_CURRENT_PAGE'    => '刷新当前页面',
-    'CLOSE_TOP_MENU'    => '关闭顶部菜单',
+    'REFRESH_CURRENT_PAGE'               => '刷新当前页面',
+    'CLOSE_TOP_MENU'                     => '关闭顶部菜单',
     'WEBSITE_HOME_PAGE'                  => '网站首页',
     "NICKNAME"                           => '昵称',
     'GENDER'                             => '性别',
@@ -94,7 +95,6 @@ return [
     "ENABLE_UCENTER"                     => '开启UCenter',
     "COMMENT_CHECK"                      => '评论审核',
     "COMMENT_TIME_INTERVAL"              => "评论时间间隔",
-    'SECONDS'                            => '秒',
     "SPECAIL_USERNAME"                   => '特殊用户名',
     "WEBSITE_SITE_NAME_REQUIRED_MESSAGE" => "请输入网站名称！",
     "WEBSITE_SITE_HOST_REQUIRED_MESSAGE" => "请输入网站域名！",
@@ -106,7 +106,6 @@ return [
     "APP"                                => '应用',
     "NAME"                               => '菜单名称',
     "ADD_SUB_MENU"                       => '添加子菜单',
-    "SAVE"                               => '保存',
     "CLOSE"                              => '关闭',
     "OPEN"                               => '开启',
     "ENABLED"                            => '开启',
@@ -134,8 +133,6 @@ return [
     'LOADING'                            => '正在加载...',
     'LOGOUT'                             => '退出',
     "OK"                                 => "确定",
-    "STATUS"                             => '状态',
-    "ACTIONS"                            => '操作',
     "SORT"                               => '排序',
     "DISPLAY"                            => '显示',
     "HIDDEN"                             => '隐藏',
