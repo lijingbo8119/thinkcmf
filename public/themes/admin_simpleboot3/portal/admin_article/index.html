@@ -4,7 +4,7 @@
 <div class="wrap js-check-wrap">
     <ul class="nav nav-tabs">
         <li class="active"><a href="javascript:;">所有文章</a></li>
-        <li><a href="{:url('AdminArticle/add')}">添加文章</a></li>
+        <li><a href="{:url('AdminArticle/add',array('category'=>$category))}">添加文章</a></li>
     </ul>
     <form class="well form-inline margin-top-20" method="post" action="{:url('AdminArticle/index')}">
         分类:

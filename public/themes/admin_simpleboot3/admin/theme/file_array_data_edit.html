@@ -18,7 +18,7 @@
     <form method="post" class="js-ajax-form margin-top-20"
           action="{:url('theme/fileArrayDataEditPost',['tab'=>$tab,'var'=>$var,'file_id'=>$file_id,'widget'=>$widget])}">
         {:_parse_vars($array_item,'item',2)}
-        <div class="form-group" style="display: none;">
+        <div class="form-group">
             <input type="hidden" name="item_index" value="{$item_index}">
             <button type="submit" class="btn btn-primary js-ajax-submit" id="submit-btn">保存</button>
         </div>

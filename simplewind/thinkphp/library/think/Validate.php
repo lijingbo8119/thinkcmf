@@ -392,6 +392,8 @@ class Validate
             $rules = explode('|', $rules);
         }
         $i = 0;
+
+        $result=true;
         foreach ($rules as $key => $rule) {
             if ($rule instanceof \Closure) {
                 $result = call_user_func_array($rule, [$value, $data]);

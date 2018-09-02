@@ -71,11 +71,13 @@ class AdminArticleController extends AdminBaseController
      *     'param'  => ''
      * )
      */
-    public function add()
+    public function add($category)
     {
         $themeModel = new ThemeModel();
         $articleThemeFiles = $themeModel->getActionThemeFiles('portal/Article/index');
         $this->assign('article_theme_files', $articleThemeFiles);
+        $this->assign('category', $category);
+
         return $this->fetch();
     }
 
@@ -97,10 +99,9 @@ class AdminArticleController extends AdminBaseController
         if ($this->request->isPost()) {
             $data = $this->request->param();
 
-            //状态只能设置默认值。未发布、未置顶、未推荐
-//            $data['post']['post_status'] = 0;
-//            $data['post']['is_top'] = 0;
-//            $data['post']['recommended'] = 0;
+            $data['post']['post_status'] = (array_key_exists('post_status', $data['post'])) ? $data['post']['post_status'] : 0;
+            $data['post']['is_top'] = (array_key_exists('is_top', $data['post'])) ? $data['post']['is_top'] : 0;
+            $data['post']['recommended'] = (array_key_exists('recommended', $data['post'])) ? $data['post']['recommended'] : 0;
 
             $post = $data['post'];
 

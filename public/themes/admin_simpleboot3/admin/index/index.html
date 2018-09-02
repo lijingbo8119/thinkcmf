@@ -66,19 +66,15 @@
     <notempty name="submenus">
         <php>foreach($submenus as $menu){</php>
         <li>
-            <php>
-                $menu_name=lang($menu['lang']);
-                $menu_name=$menu['lang']==$menu_name?$menu['name']:$menu_name;
-            </php>
             <php>if(empty($menu['items'])){</php>
-            <a href="javascript:openapp('{$menu.url}','{$menu.id}','{$menu_name}',true);">
+            <a href="javascript:openapp('{$menu.url}','{$menu.id}','{$menu.id}',true);">
                 <i class="fa fa-{$menu.icon|default='desktop'}"></i>
-                <span class="menu-text"> {$menu_name} </span>
+                <span class="menu-text"> {$menu['name']} </span>
             </a>
             <php>}else{</php>
             <a href="#" class="dropdown-toggle">
                 <i class="fa fa-{$menu.icon|default='desktop'} normal"></i>
-                <span class="menu-text normal"> {$menu_name} </span>
+                <span class="menu-text normal"> {$menu['name']} </span>
                 <b class="arrow fa fa-angle-right normal"></b>
                 <i class="fa fa-reply back"></i>
                 <span class="menu-text back">返回</span>
@@ -99,22 +95,18 @@
     <php>function getsubmenu1($submenus){</php>
     <php>foreach($submenus as $menu){</php>
     <li>
-        <php>
-            $menu_name=lang($menu['lang']);
-            $menu_name=$menu['lang']==$menu_name?$menu['name']:$menu_name;
-        </php>
         <php>if(empty($menu['items'])){</php>
-        <a href="javascript:openapp('{$menu.url}','{$menu.id}','{$menu_name}',true);">
+        <a href="javascript:openapp('{$menu.url}','{$menu.id}','{$menu.id}',true);">
             <i class="fa fa-caret-right"></i>
             <span class="menu-text">
-									{$menu_name}
-								</span>
+                {$menu['name']}
+            </span>
         </a>
         <php>}else{</php>
         <a href="#" class="dropdown-toggle">
             <i class="fa fa-caret-right"></i>
             <span class="menu-text">
-									{$menu_name}
+									{$menu['name']}
 								</span>
             <b class="arrow fa fa-angle-right"></b>
         </a>
@@ -131,15 +123,10 @@
     <php>function getsubmenu2($submenus){</php>
     <php>foreach($submenus as $menu){</php>
     <li>
-        <php>
-            $menu_name=lang($menu['lang']);
-            $menu_name=$menu['lang']==$menu_name?$menu['name']:$menu_name;
-        </php>
-
-        <a href="javascript:openapp('{$menu.url}','{$menu.id}','{$menu_name}',true);">
+        <a href="javascript:openapp('{$menu.url}','{$menu.id}','{$menu.id}',true);">
             &nbsp;<i class="fa fa-angle-double-right"></i>
             <span class="menu-text">
-								{$menu_name}
+								{$menu['name']}
 							</span>
         </a>
     </li>
@@ -164,7 +151,7 @@
 <div id="right-tools-wrapper">
     <!--<span id="right_tools_clearcache" title="清除缓存" onclick="javascript:openapp('{:url('admin/Setting/clearcache')}','right_tool_clearcache','清除缓存');"><i class="fa fa-trash-o right_tool_icon"></i></span>-->
     <!--<span id="refresh-wrapper" title="{:lang('REFRESH_CURRENT_PAGE')}"><i-->
-            <!--class="fa fa-refresh right_tool_icon"></i></span>-->
+    <!--class="fa fa-refresh right_tool_icon"></i></span>-->
 </div>
 <div class="navbar navbar-default">
     <div class="container-fluid">

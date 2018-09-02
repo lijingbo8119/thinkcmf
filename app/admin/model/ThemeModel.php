@@ -15,6 +15,24 @@ use think\Db;
 
 class ThemeModel extends Model
 {
+    public function files()
+    {
+        return $this->hasMany('ThemeFileModel', 'theme', 'theme');
+    }
+
+    static public function getTemplateVars($templateName = '首页')
+    {
+        $themeName = config('cmf_default_theme');
+
+        $row=ThemeFileModel::where('theme', $themeName)->where('name', $templateName)->find();
+
+        $arr=$row->toArray();
+        if (!$arr||!array_key_exists('more',$arr)||!array_key_exists('vars',$arr['more'])){
+            return [];
+        }
+
+        return $arr['more']['vars'];
+    }
 
     /**
      * 获取插件列表
@@ -28,8 +46,8 @@ class ThemeModel extends Model
     {
         $manifest = "themes/$theme/manifest.json";
         if (file_exists_case($manifest)) {
-            $manifest           = file_get_contents($manifest);
-            $themeData          = json_decode($manifest, true);
+            $manifest = file_get_contents($manifest);
+            $themeData = json_decode($manifest, true);
             $themeData['theme'] = $theme;
 
             $this->updateThemeFiles($theme);
@@ -45,7 +63,7 @@ class ThemeModel extends Model
     {
         $manifest = "themes/$theme/manifest.json";
         if (file_exists_case($manifest)) {
-            $manifest  = file_get_contents($manifest);
+            $manifest = file_get_contents($manifest);
             $themeData = json_decode($manifest, true);
 
             $this->updateThemeFiles($theme);
@@ -70,13 +88,13 @@ class ThemeModel extends Model
 
     private function updateThemeFiles($theme, $suffix = 'html')
     {
-        $dir                = 'themes/' . $theme;
-        $themeDir           = $dir;
-        $tplFiles           = [];
+        $dir = 'themes/' . $theme;
+        $themeDir = $dir;
+        $tplFiles = [];
         $root_dir_tpl_files = cmf_scan_dir("$dir/*.$suffix");
         foreach ($root_dir_tpl_files as $root_tpl_file) {
-            $root_tpl_file           = "$dir/$root_tpl_file";
-            $configFile              = preg_replace("/\.$suffix$/", '.json', $root_tpl_file);
+            $root_tpl_file = "$dir/$root_tpl_file";
+            $configFile = preg_replace("/\.$suffix$/", '.json', $root_tpl_file);
             $root_tpl_file_no_suffix = preg_replace("/\.$suffix$/", '', $root_tpl_file);
             if (is_file($root_tpl_file) && file_exists_case($configFile)) {
                 array_push($tplFiles, $root_tpl_file_no_suffix);
@@ -87,8 +105,8 @@ class ThemeModel extends Model
         foreach ($subDirs as $dir) {
             $subDirTplFiles = cmf_scan_dir("$dir/*.$suffix");
             foreach ($subDirTplFiles as $tplFile) {
-                $tplFile         = "$dir/$tplFile";
-                $configFile      = preg_replace("/\.$suffix$/", '.json', $tplFile);
+                $tplFile = "$dir/$tplFile";
+                $configFile = preg_replace("/\.$suffix$/", '.json', $tplFile);
                 $tplFileNoSuffix = preg_replace("/\.$suffix$/", '', $tplFile);
                 if (is_file($tplFile) && file_exists_case($configFile)) {
                     array_push($tplFiles, $tplFileNoSuffix);
@@ -98,40 +116,40 @@ class ThemeModel extends Model
 
         foreach ($tplFiles as $tplFile) {
             $configFile = $tplFile . ".json";
-            $file       = preg_replace('/^themes\/' . $theme . '\//', '', $tplFile);
-            $file       = strtolower($file);
-            $config     = json_decode(file_get_contents($configFile), true);
-            $findFile   = Db::name('theme_file')->where(['theme' => $theme, 'file' => $file])->find();
-            $isPublic   = empty($config['is_public']) ? 0 : 1;
-            $listOrder  = empty($config['order']) ? 0 : floatval($config['order']);
+            $file = preg_replace('/^themes\/' . $theme . '\//', '', $tplFile);
+            $file = strtolower($file);
+            $config = json_decode(file_get_contents($configFile), true);
+            $findFile = Db::name('theme_file')->where(['theme' => $theme, 'file' => $file])->find();
+            $isPublic = empty($config['is_public']) ? 0 : 1;
+            $listOrder = empty($config['order']) ? 0 : floatval($config['order']);
             $configMore = empty($config['more']) ? [] : $config['more'];
-            $more       = $configMore;
+            $more = $configMore;
 
             if (empty($findFile)) {
                 Db::name('theme_file')->insert([
-                    'theme'       => $theme,
-                    'action'      => $config['action'],
-                    'file'        => $file,
-                    'name'        => $config['name'],
-                    'more'        => json_encode($more),
+                    'theme' => $theme,
+                    'action' => $config['action'],
+                    'file' => $file,
+                    'name' => $config['name'],
+                    'more' => json_encode($more),
                     'config_more' => json_encode($configMore),
                     'description' => $config['description'],
-                    'is_public'   => $isPublic,
-                    'list_order'  => $listOrder
+                    'is_public' => $isPublic,
+                    'list_order' => $listOrder
                 ]);
             } else { // 更新文件
                 $moreInDb = json_decode($findFile['more'], true);
-                $more     = $this->updateThemeConfigMore($configMore, $moreInDb);
+                $more = $this->updateThemeConfigMore($configMore, $moreInDb);
                 Db::name('theme_file')->where(['theme' => $theme, 'file' => $file])->update([
-                    'theme'       => $theme,
-                    'action'      => $config['action'],
-                    'file'        => $file,
-                    'name'        => $config['name'],
-                    'more'        => json_encode($more),
+                    'theme' => $theme,
+                    'action' => $config['action'],
+                    'file' => $file,
+                    'name' => $config['name'],
+                    'more' => json_encode($more),
                     'config_more' => json_encode($configMore),
                     'description' => $config['description'],
-                    'is_public'   => $isPublic,
-                    'list_order'  => $listOrder
+                    'is_public' => $isPublic,
+                    'list_order' => $listOrder
                 ]);
             }
         }
@@ -140,7 +158,7 @@ class ThemeModel extends Model
         $files = Db::name('theme_file')->where(['theme' => $theme])->select();
 
         foreach ($files as $themeFile) {
-            $tplFile           = $themeDir . '/' . $themeFile['file'] . '.' . $suffix;
+            $tplFile = $themeDir . '/' . $themeFile['file'] . '.' . $suffix;
             $tplFileConfigFile = $themeDir . '/' . $themeFile['file'] . '.json';
             if (!is_file($tplFile) || !file_exists_case($tplFileConfigFile)) {
                 Db::name('theme_file')->where(['theme' => $theme, 'file' => $themeFile['file']])->delete();
@@ -193,6 +211,4 @@ class ThemeModel extends Model
 
         return $configMore;
     }
-
-
 }
